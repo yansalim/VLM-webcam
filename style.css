@@ -1,0 +1,143 @@
+body {
+    font-family: 'Share Tech Mono', monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background: radial-gradient(ellipse at center, #330033 0%, #0a0a0a 70%);
+    color: #00ff00;
+    overflow: hidden;
+    position: relative;
+}
+
+
+
+h1 {
+    color: #00ffff;
+    text-shadow: 0 0 10px #00ffff;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.7;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.controls, .io-areas {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    background-color: rgba(26, 26, 26, 0.8);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #00ff00;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    z-index: 1;
+}
+
+.io-areas {
+    flex-direction: column;
+    align-items: stretch;
+}
+
+textarea, input, select {
+    width: 300px;
+    padding: 8px;
+    border: 1px solid #00ff00;
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: #0a0a0a;
+    color: #00ff00;
+    font-family: 'Share Tech Mono', monospace;
+    transition: box-shadow 0.3s ease;
+}
+
+#baseURL {
+    height: 2em;
+}
+
+#instructionText, #responseText {
+    height: 2em;
+}
+
+textarea:focus, input:focus, select:focus {
+    outline: none;
+    box-shadow: 0 0 15px #00ff00;
+}
+
+#videoFeed {
+    width: 480px;
+    height: 360px;
+    border: 2px solid #ff00ff;
+    background-color: #000;
+    border-radius: 8px;
+    box-shadow: 0 0 15px #ff00ff;
+    z-index: 1;
+}
+
+#startButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: 1px solid #00ffff;
+    border-radius: 4px;
+    color: #00ffff;
+    background-color: transparent;
+    transition: all 0.3s ease;
+    z-index: 1;
+}
+
+#startButton:hover {
+    background-color: #00ffff;
+    color: #0a0a0a;
+    box-shadow: 0 0 10px #00ffff;
+}
+
+#startButton.start {
+    border-color: #00ff00;
+    color: #00ff00;
+}
+
+#startButton.start:hover {
+    background-color: #00ff00;
+    color: #0a0a0a;
+    box-shadow: 0 0 10px #00ff00;
+}
+
+#startButton.stop {
+    border-color: #ff0000;
+    color: #ff0000;
+}
+
+#startButton.stop:hover {
+    background-color: #ff0000;
+    color: #0a0a0a;
+    box-shadow: 0 0 10px #ff0000;
+}
+
+label {
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow: 0 0 8px #00ffff;
+    z-index: 1;
+}
+
+select {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #00ff00;
+}
+
+.hidden {
+    display: none;
+}
