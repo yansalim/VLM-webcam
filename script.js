@@ -6,13 +6,26 @@ const responseText = document.getElementById('responseText');
 const intervalSelect = document.getElementById('intervalSelect');
 const startButton = document.getElementById('startButton');
 
-instructionText.value = "What do you see?"; // default instruction
+instructionText.value = "What do you see?";
 
 let stream;
 let intervalId;
 let isProcessing = false;
 
-// Returns response text (string)
+async function saveResponse(response) {
+    try {
+        await fetch('http://localhost:3000/save-response', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ response })
+        });
+    } catch (error) {
+        console.error('Error saving response:', error);
+    }
+}
+
 async function sendChatCompletionRequest(instruction, imageBase64URL) {
     const response = await fetch(`${baseURL.value}/v1/chat/completions`, {
         method: 'POST',
@@ -36,10 +49,11 @@ async function sendChatCompletionRequest(instruction, imageBase64URL) {
         return `Server error: ${response.status} - ${errorData}`;
     }
     const data = await response.json();
-    return data.choices[0].message.content;
+    const responseContent = data.choices[0].message.content;
+    await saveResponse(responseContent);
+    return responseContent;
 }
 
-// 1. Ask for camera permission on load
 async function initCamera() {
     try {
         stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
@@ -61,19 +75,17 @@ function captureImage() {
     canvas.height = video.videoHeight;
     const context = canvas.getContext('2d');
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    return canvas.toDataURL('image/jpeg', 0.8); // Use JPEG for smaller size, 0.8 quality
+    return canvas.toDataURL('image/jpeg', 0.8);
 }
 
 async function sendData() {
-    if (!isProcessing) return; // Ensure we don't have overlapping requests if processing takes longer than interval
+    if (!isProcessing) return;
 
     const instruction = instructionText.value;
     const imageBase64URL = captureImage();
 
     if (!imageBase64URL) {
         responseText.value = "Failed to capture image. Stream might not be active.";
-        // Optionally stop processing if image capture fails consistently
-        // handleStop();
         return;
     }
 
@@ -109,10 +121,8 @@ function handleStart() {
 
     const intervalMs = parseInt(intervalSelect.value, 10);
     
-    // Initial immediate call
     sendData(); 
     
-    // Then set interval
     intervalId = setInterval(sendData, intervalMs);
 }
 
@@ -141,10 +151,8 @@ startButton.addEventListener('click', () => {
     }
 });
 
-// Initialize camera when the page loads
 window.addEventListener('DOMContentLoaded', initCamera);
 
-// Optional: Stop stream when page is closed/navigated away to release camera
 window.addEventListener('beforeunload', () => {
     if (stream) {
         stream.getTracks().forEach(track => track.stop());
